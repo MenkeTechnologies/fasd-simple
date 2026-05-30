@@ -49,3 +49,37 @@
     done
     assert "$missing" is_empty
 }
+
+#--------------------------------------------------------------
+# Round 3: fresh-surface pins (bin/fasd --init modes)
+#--------------------------------------------------------------
+
+@test 'bin/fasd --version prints 1.0.1 (vendored upstream version)' {
+    # Pin: the vendored bin/fasd is upstream 1.0.1. A future re-vendor
+    # to a newer release must update this number deliberately, so users
+    # don't get a silent functional drift via a Makefile bump.
+    local out
+    out=$(sh "$pluginDir/bin/fasd" --version 2>&1)
+    assert "$out" same_as '1.0.1'
+}
+
+@test 'bin/fasd --init auto branches by ZSH_VERSION / BASH_VERSION / posix' {
+    # Pin: the plugin file invokes `fasd --init auto`. The `auto` mode
+    # MUST dispatch to zsh, bash, or posix init based on the shell env
+    # - otherwise the plugin works only under one of the three. Catches
+    # a re-vendor that drops a shell branch.
+    local out
+    out=$(sh "$pluginDir/bin/fasd" --init auto 2>&1)
+    assert "$out" contains 'ZSH_VERSION'
+    assert "$out" contains 'BASH_VERSION'
+    assert "$out" contains 'posix-alias posix-hook'
+}
+
+@test 'bin/fasd --init zsh-hook emits add-zsh-hook preexec _fasd_preexec' {
+    # Pin: the zsh-hook init must register _fasd_preexec on preexec.
+    # Without this, fasd never records the directories you visit and
+    # the database stays empty. Exact wiring matters - pin the call.
+    local out
+    out=$(sh "$pluginDir/bin/fasd" --init zsh-hook 2>&1)
+    assert "$out" contains 'add-zsh-hook preexec _fasd_preexec'
+}
