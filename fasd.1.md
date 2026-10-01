@@ -37,8 +37,9 @@ Fasd keeps track of files and directories you access in your shell and gives you
 quick access to them. You can use fasd to reference files or directories by just
 a few key identifying characters. You can use fasd to boost your command line
 productivity by defining your own aliases to launch programs on files or
-directories. Fasd, by default, provides some basic aliases, including a shell
-function "z" that resembles the functionality of "z" and "autojump."
+directories. This build defines no aliases; `fasd --init posix-alias` defines
+only the `fasd_cd` function, over which a "z" alias resembling "z" and
+"autojump" can be defined.
 
 The name "fasd" comes from the default suggested aliases `f`(files),
 `a`(files/directories), `s`(show/search/select), `d`(directories).
@@ -77,9 +78,9 @@ pass customized set of arguments to `fasd --init`.
     bash-hook            # add hook code to bash $PROMPT_COMMAND
     bash-ccomp           # bash command mode completion definitions
     bash-ccomp-install   # setup command mode completion for bash
-    posix-alias          # define aliases that applies to all posix shells
+    posix-alias          # define the fasd_cd function (no aliases in this build)
     posix-hook           # setup $PS1 hook for shells that's posix compatible
-    tcsh-alias           # define aliases for tcsh
+    tcsh-alias           # emits nothing in this build
     tcsh-hook            # setup tcsh precmd alias
 
 Example for a minimal zsh setup (no tab completion):

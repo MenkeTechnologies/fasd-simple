@@ -32,7 +32,10 @@ will "expand" your command into the right side. Pretty magic, huh?
   vim `f rc conf`  =>     vim /etc/rc.conf
 ```
 
-Fasd comes with some useful aliases by default:
+This build defines no aliases. `fasd --init posix-alias` only defines the
+`fasd_cd` function, and `fasd --init tcsh-alias` emits nothing. The aliases
+used throughout this README are the upstream defaults; add the ones you want to
+your shell rc:
 
 ```sh
 alias a='fasd -a'        # any
@@ -78,8 +81,14 @@ Install to $HOME:
 
     PREFIX=$HOME make install
 
-Or alternatively you can just copy `fasd` to anywhere you like (preferably
+Or alternatively you can just copy `bin/fasd` to anywhere you like (preferably
 under some directory in `$PATH`).
+
+As a zsh plugin, `fasd-simple.plugin.zsh` uses the `fasd` already on `$PATH`
+if there is one, otherwise it appends this repo's `bin/` to `$PATH`. It writes
+the output of `fasd --init auto` to `$ZSH_CACHE_DIR/fasd-init-cache` and
+sources it; with a `fasd` already on `$PATH` the cache is only rewritten when
+that executable is newer than the cache or the cache is empty.
 
 To get fasd working in a shell, some initialization code must be run. Put the
 line below in your shell rc.
@@ -103,9 +112,9 @@ zsh-wcomp-install    # setup word mode completion for zsh
 bash-hook            # add hook code to bash $PROMPT_COMMAND
 bash-ccomp           # bash command mode completion definitions
 bash-ccomp-install   # setup command mode completion for bash
-posix-alias          # define aliases that applies to all posix shells
+posix-alias          # define the fasd_cd function (no aliases in this build)
 posix-hook           # setup $PS1 hook for shells that's posix compatible
-tcsh-alias           # define aliases for tcsh
+tcsh-alias           # emits nothing in this build
 tcsh-hook            # setup tcsh precmd alias
 ```
 
