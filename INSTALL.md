@@ -11,7 +11,7 @@ Install to $HOME:
 
     PREFIX=$HOME make install
 
-Or alternatively you can just copy `fasd` to anywhere you like.
+Or alternatively you can just copy `bin/fasd` to anywhere you like.
 
 To get fasd working in a shell, some initialization code must be run. Put the
 line below in your shell rc.
@@ -32,9 +32,9 @@ pass customized set of arguments to `fasd --init`.
     bash-hook            # add hook code to bash $PROMPT_COMMAND
     bash-ccomp           # bash command mode completion definitions
     bash-ccomp-install   # setup command mode completion for bash
-    posix-alias          # define alias that applies to all posix shells
+    posix-alias          # define the fasd_cd function (no aliases in this build)
     posix-hook           # setup $PS1 hook for shells that's posix compatible
-    tcsh-alias           # define aliases for tcsh
+    tcsh-alias           # emits nothing in this build
     tcsh-hook            # setup tcsh precmd alias
 
 Example for a minimal zsh setup (no tab completion):
@@ -56,17 +56,9 @@ Optionally, if you can also source `fasd` if you want `fasd` to be a shell
 function instead of an executable.
 
 You can tweak initialization code. For instance, if you want to use "c"
-instead of "z" to do directory jumping. You run the code below:
+instead of "z" to do directory jumping, you can use the alias below:
 
-    # function to execute built-in cd
-    fasd_cd() {
-      if [ $# -le 1 ]; then
-        fasd "$@"
-      else
-        local _fasd_ret="$(fasd -e echo "$@")"
-        [ -z "$_fasd_ret" ] && return
-        [ -d "$_fasd_ret" ] && cd "$_fasd_ret" || echo "$_fasd_ret"
-      fi
-    }
     alias c='fasd_cd -d' # `-d' option present for bash completion
+    # function fasd_cd is defined in posix-alias
 
+This build defines no aliases; add the ones you want (see README.md).
